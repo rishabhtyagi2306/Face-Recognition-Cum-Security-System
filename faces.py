@@ -1,6 +1,7 @@
 import numpy as np
 from tkinter import *
 import cv2
+import faces_train as ft
 
 root = Tk()
 root.geometry('500x600')
@@ -26,8 +27,15 @@ def on_click():
                 print(x, y, w, h)
                 roi_gray = gray[y:y + h, x:x + w]
                 roi_color = frame[y:y + h, x:x + w]
-                img_item = "my_image.png"
+                img_item = "test.jpg"
                 cv2.imwrite(img_item, roi_color)
+                a = ft.classify_face("test.jpg")
+                if a == 'Unknown':
+                    mylabel = Label(root, text="Sorry you are not authenticated")
+                    mylabel.pack()
+                else:
+                    mylabel = Label(root, text="Welcome Sir !!!")
+                    mylabel.pack()
 
     cap.release()
     # cv2.destroyAllWindows()
