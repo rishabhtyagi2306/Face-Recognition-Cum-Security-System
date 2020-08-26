@@ -5,11 +5,20 @@ import faces_train as ft
 import os
 import keys
 import smtplib
+import pyttsx3
 
 root = Tk()
 root.geometry('500x600')
 heading = Label(root, text="Welcome! to the super secure face recognition system",
                 font=('montserrat', 12, "bold"), fg="black").pack()
+
+
+def speak(my_entry):
+    engine = pyttsx3.init()
+    voices = engine.getProperty('voices')
+    engine.setProperty('voice', voices[1].id)
+    engine.say(my_entry)
+    engine.runAndWait()
 
 
 def send_mails():
@@ -25,11 +34,11 @@ def send_mails():
 
 
 def on_click():
-    my_label = Label(root, text="Look into the camera")
+    my_label = Label(root, text="please, Look into the camera")
     my_label.pack()
     face_cascade = cv2.CascadeClassifier('cascades/data/haarcascade_frontalface_alt2.xml')
     cap = cv2.VideoCapture(0)
-
+    speak("please, Look into the camera for 5 seconds to open Visual Studio Code")
     if cap.isOpened():
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -37,6 +46,7 @@ def on_click():
         if faces == ():
             mylabel = Label(root, text="Sorry could not find your face try again")
             mylabel.pack()
+            speak("Sorry could not find your face try again")
         else:
             for (x, y, w, h) in faces:
                 print(x, y, w, h)
@@ -48,17 +58,21 @@ def on_click():
                 print(ft.classify_face("test.jpg"))
                 if a == ['Unknown']:
                     try:
-                        mylabel = Label(root, text="Sorry you are not authenticated")
+                        mylabel = Label(root, text="Sorry Sir !!! you are not authenticated to enter the system")
                         mylabel.pack()
+                        speak("Sorry Sir !!! you are not authenticated to enter the system")
                         send_mails()
                     except Exception as e:
                         print(e)
-                        mylabel = Label(root, text="Sorry you are not authenticated")
+                        mylabel = Label(root, text="Sorry Sir !!! you are not authenticated to enter the system")
                         mylabel.pack()
+                        speak("Sorry Sir !!! you are not authenticated to enter the system")
 
                 else:
                     mylabel = Label(root, text="Welcome Sir !!!")
                     mylabel.pack()
+                    s = "Welcome Sir !!!" + " opening Visual Studio Code please wait."
+                    speak(s)
                     path = keys.VS_PATH()
                     os.startfile(path)
 
