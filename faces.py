@@ -4,11 +4,24 @@ import cv2
 import faces_train as ft
 import os
 import keys
+import smtplib
 
 root = Tk()
 root.geometry('500x600')
 heading = Label(root, text="Welcome! to the super secure face recognition system",
                 font=('montserrat', 12, "bold"), fg="black").pack()
+
+
+def send_mails():
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.ehlo()
+    server.starttls()
+    server.login(keys.Gmail(), keys.gmail_password())
+    subject = "Alert !!!"
+    body = "Someone tried to use your system. If it isn't you then please make necessary actions."
+    msg = f'Subject: {subject}\n\n{body}'
+    server.sendmail(keys.Gmail(), keys.Alert_Gmail(), msg)
+    server.close()
 
 
 def on_click():
@@ -21,7 +34,7 @@ def on_click():
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, scaleFactor=1.5, minNeighbors=5)
-        if faces is ():
+        if faces == ():
             mylabel = Label(root, text="Sorry could not find your face try again")
             mylabel.pack()
         else:
@@ -34,14 +47,20 @@ def on_click():
                 a = ft.classify_face("test.jpg")
                 print(ft.classify_face("test.jpg"))
                 if a == ['Unknown']:
-                    mylabel = Label(root, text="Sorry you are not authenticated")
-                    mylabel.pack()
+                    try:
+                        mylabel = Label(root, text="Sorry you are not authenticated")
+                        mylabel.pack()
+                        send_mails()
+                    except Exception as e:
+                        print(e)
+                        mylabel = Label(root, text="Sorry you are not authenticated")
+                        mylabel.pack()
+
                 else:
                     mylabel = Label(root, text="Welcome Sir !!!")
                     mylabel.pack()
                     path = keys.VS_PATH()
                     os.startfile(path)
-
 
     cap.release()
     # cv2.destroyAllWindows()
