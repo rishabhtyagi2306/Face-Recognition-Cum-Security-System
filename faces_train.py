@@ -27,7 +27,6 @@ def unknown_image_encoded(img):
 
 
 def classify_face(im):
-
     faces = get_encoded_faces()
     faces_encoded = list(faces.values())
     known_face_names = list(faces.keys())
@@ -61,8 +60,7 @@ def classify_face(im):
             cv2.rectangle(img, (left - 20, bottom - 15), (right + 20, bottom + 20), (255, 0, 0), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
             cv2.putText(img, name, (left - 20, bottom + 15), font, 1.0, (255, 255, 255), 2)
+    return face_names
 
 
 # print(classify_face("test.jpg"))
-
-
