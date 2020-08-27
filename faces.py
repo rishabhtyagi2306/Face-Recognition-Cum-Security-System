@@ -39,16 +39,6 @@ def send_mails():
         msg.add_attachment(file_data, maintype='image', subtype=file_type, filename=file_name)
         smtp.send_message(msg)
 
-    # server = smtplib.SMTP_SSL('smtp.gmail.com', 587)
-    # server.ehlo()
-    # server.starttls()
-    # server.login(keys.Gmail(), keys.gmail_password())
-    # subject = "Alert !!!"
-    # body = "Someone tried to use your system. If it isn't you then please make necessary actions."
-    # msg = f'Subject: {subject}\n\n{body}'
-    # server.sendmail(keys.Gmail(), keys.Alert_Gmail(), msg)
-    # server.close()
-
 
 def on_click():
     my_label = Label(root, text="please, Look into the camera")
@@ -94,7 +84,6 @@ def on_click():
                     os.startfile(path)
 
     cap.release()
-    # cv2.destroyAllWindows()
 
 
 my_button = Button(root, text="click here to open VS Code", command=on_click)
