@@ -6,6 +6,8 @@ import os
 import keys
 import smtplib
 import pyttsx3
+import imghdr
+from email.message import EmailMessage
 
 root = Tk()
 root.geometry('500x600')
@@ -22,15 +24,30 @@ def speak(my_entry):
 
 
 def send_mails():
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.ehlo()
-    server.starttls()
-    server.login(keys.Gmail(), keys.gmail_password())
-    subject = "Alert !!!"
-    body = "Someone tried to use your system. If it isn't you then please make necessary actions."
-    msg = f'Subject: {subject}\n\n{body}'
-    server.sendmail(keys.Gmail(), keys.Alert_Gmail(), msg)
-    server.close()
+    with open('test.jpg', 'rb') as f:
+        file_data = f.read()
+        file_type = imghdr.what(f.name)
+        file_name = f.name
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(keys.Gmail(), keys.gmail_password())
+        msg = EmailMessage()
+        msg['Subject'] = "Alert !!!"
+        msg['From'] = keys.Gmail()
+        msg['To'] = keys.Alert_Gmail()
+        msg.set_content("Someone tried to use your system. If it isn't you then please make necessary actions. Image "
+                        "of that person is attached with this mail.")
+        msg.add_attachment(file_data, maintype='image', subtype=file_type, filename=file_name)
+        smtp.send_message(msg)
+
+    # server = smtplib.SMTP_SSL('smtp.gmail.com', 587)
+    # server.ehlo()
+    # server.starttls()
+    # server.login(keys.Gmail(), keys.gmail_password())
+    # subject = "Alert !!!"
+    # body = "Someone tried to use your system. If it isn't you then please make necessary actions."
+    # msg = f'Subject: {subject}\n\n{body}'
+    # server.sendmail(keys.Gmail(), keys.Alert_Gmail(), msg)
+    # server.close()
 
 
 def on_click():
